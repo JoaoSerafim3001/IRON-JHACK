@@ -1,6 +1,7 @@
 let windowWidth = window.innerWidth
 let windowHeight = window.innerHeight
 let jack
+let lines
 let score = 0
 
 
@@ -9,14 +10,16 @@ function setup() {
   // background('white')
   // canvas.parent('gameBoard')
   jack = new Jack()
-  print(jack.x, jack.y)
+  lines = new Line()
   // noLoop()
 }
+
+
 
 function draw() {
   background('lightBlue')
   fill(64)
-  rect(0,windowHeight-25, windowWidth,25)
+  rect(0, windowHeight - 25, windowWidth, 25)
 
   //SCORE text
   fill("wihte");
@@ -28,6 +31,7 @@ function draw() {
 
 
   jack.moveAndDraw()
+  lines.draw()
 }
 
 function windowResized() {

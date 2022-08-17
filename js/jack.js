@@ -5,7 +5,7 @@ class Jack {
     this.x = windowWidth / 2 - this.w / 2
     this.y = windowHeight - this.w
 
-    this.speed = 6
+    this.speed = 5
   }
 
   draw() {
@@ -13,7 +13,7 @@ class Jack {
     fill(0)
     rect(this.x, this.y - this.w - 25, this.w, this.h * 2)
 
-    // This draws a man incon shape
+    // This draws a man icon shape
 
     // ellipse(this.x + this.w / 2, this.y - this.h * 2.5, this.w/1.5, this.w/1.5)
     // fill(0)
@@ -44,9 +44,15 @@ class Jack {
     this.moveRight();
     this.moveLeft();
     this.jump()
-    this.x = constrain(this.x, 0, width - this.w);
-    this.y = constrain(this.y, 0, height - this.h)
-    // this.x = min(width - this.w, max(this.x, 0));
+    if (this.x > windowWidth) {
+      this.x = 0 - this.w
+    }
+
+    if (this.x + this.w < 0) {
+      this.x = windowWidth
+    }
+    // this.x = constrain(this.x, 0, width - this.w);
+    // this.y = constrain(this.y, 0, height)
     this.draw();
   }
 }
