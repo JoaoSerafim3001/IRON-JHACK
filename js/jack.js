@@ -1,6 +1,6 @@
 class Jack {
   constructor() {
-    this.w = 25
+    this.w = 30
     this.h = this.w
     this.x = windowWidth / 2 - this.w / 2
     this.y = windowHeight - this.w
@@ -11,7 +11,8 @@ class Jack {
   draw() {
     noStroke()
     fill(0)
-    rect(this.x, this.y - this.w - 25, this.w, this.h * 2)
+    Image(jackImg, this.x, this.y - this.w - 25, this.w, this.h * 2)
+    // rect(this.x, this.y - this.w - 25, this.w, this.h * 2)
 
     // This draws a man icon shape
 

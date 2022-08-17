@@ -1,8 +1,13 @@
 let windowWidth = window.innerWidth
 let windowHeight = window.innerHeight
 let jack
+let jackImg
 let lines
 let score = 0
+
+function preload(){
+  jackImg= loadImage(assets/jack.png)
+}
 
 
 function setup() {
