@@ -1,19 +1,17 @@
-let holes = []
-
 class Line {
   constructor() {
     this.w = windowWidth
-    this.h = 10
+    this.h = 4
     this.x = 0
-    this.y = windowHeight - 100
+    this.y = windowHeight - lineGap
   }
 
-  draw(){
+  draw() {
     fill('red')
-    rect(this.x,this.y,this.w,this.h)
+    noStroke()
+    rect(this.x, this.y, this.w, this.h)
+    rect(this.x, this.y - lineGap, this.w, this.h)
+    rect(this.x, this.y - lineGap * 2, this.w, this.h)
+
   }
-
-  
-
-
 }

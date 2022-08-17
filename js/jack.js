@@ -1,9 +1,9 @@
 class Jack {
   constructor() {
     this.w = 30
-    this.h = this.w
+    this.h = this.w * 2
     this.x = windowWidth / 2 - this.w / 2
-    this.y = windowHeight - this.w
+    this.y = windowHeight - this.h
 
     this.speed = 5
   }
@@ -11,8 +11,7 @@ class Jack {
   draw() {
     noStroke()
     fill(0)
-    Image(jackImg, this.x, this.y - this.w - 25, this.w, this.h * 2)
-    // rect(this.x, this.y - this.w - 25, this.w, this.h * 2)
+    image(jackImg, this.x, this.y, this.w, this.h)
 
     // This draws a man icon shape
 
@@ -35,16 +34,27 @@ class Jack {
     }
   }
 
-  jump() {
-    if (keyIsDown(UP_ARROW)) {
-      this.y -= this.speed
+  // JUMP //
+
+  // jump() {
+  //   if (keyIsDown(UP_ARROW)) {
+  //     this.y = this.y - lineGap
+  //   }
+  // }
+
+
+  keyPressed() {
+    if (keyCode === 32) {
+      this.y = windowHeight - this.h - lineGap
     }
   }
 
   moveAndDraw() {
     this.moveRight();
     this.moveLeft();
-    this.jump()
+    // this.jump()
+    this.keyPressed()
+
     if (this.x > windowWidth) {
       this.x = 0 - this.w
     }
@@ -52,8 +62,7 @@ class Jack {
     if (this.x + this.w < 0) {
       this.x = windowWidth
     }
-    // this.x = constrain(this.x, 0, width - this.w);
-    // this.y = constrain(this.y, 0, height)
+
     this.draw();
   }
 }

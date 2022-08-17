@@ -2,32 +2,65 @@ let windowWidth = window.innerWidth
 let windowHeight = window.innerHeight
 let jack
 let jackImg
-let lines
+let horizontalLine
+let holes = []
+let lineGap = 80
+
 let score = 0
 
-function preload(){
-  jackImg= loadImage(assets/jack.png)
+
+function preload() {
+  jackImg = loadImage('assets/jack.png')
 }
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight)
-  // background('white')
-  // canvas.parent('gameBoard')
+  const canvas = createCanvas(windowWidth, windowHeight)
+  canvas.parent('gameBoard')
   jack = new Jack()
-  lines = new Line()
-  // noLoop()
+  horizontalLine = new Line()
+  holes = new Hole()
 }
+
+class Hole {
+  constructor() {
+    const holeW = 80
+    this.x = windowWidth / 2 - holeW / 2
+    this.y = windowHeight - lineGap
+    this.w = holeW
+    this.h = 4
+  }
+
+  draw() {
+    fill('lightBlue')
+    noStroke()
+    rect(this.x, this.y, this.w, this.h)
+    rect(this.x, this.y - lineGap, this.w, this.h)
+    rect(this.x, this.y - lineGap * 2, this.w, this.h)
+  }
+
+
+  move() {
+    this.x += this.x + 2
+  }
+}
+
 
 
 
 function draw() {
   background('lightBlue')
-  fill(64)
-  rect(0, windowHeight - 25, windowWidth, 25)
 
-  //SCORE text
+  // GROUND //
+
+  // LINES //
+  // stroke('red')
+  // strokeWeight(lineStroke)
+  // line(x1, y1, x2, y2)
+
+  // SCORE TEXT //
   fill("wihte");
+  noStroke()
   textAlign(CENTER)
   textFont('Helvetica')
   textStyle('bold')
@@ -36,15 +69,10 @@ function draw() {
 
 
   jack.moveAndDraw()
-  lines.draw()
+  horizontalLine.draw()
+  holes.draw()
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight)
 }
-
-//window.onresize = function () {
-//  windowWidth = window.innerWidth;
-//  windowHeight = window.innerHeight;
-//  canvas.size(windowWidth, windowHeight);
-//}
