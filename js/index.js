@@ -43,8 +43,8 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight)
 }
 
-window.onresize = function () {
-  windowWidth = window.innerWidth;
-  windowHeight = window.innerHeight;
-  canvas.size(windowWidth, windowHeight);
-}
+//window.onresize = function () {
+//  windowWidth = window.innerWidth;
+//  windowHeight = window.innerHeight;
+//  canvas.size(windowWidth, windowHeight);
+//}
