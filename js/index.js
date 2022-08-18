@@ -25,7 +25,7 @@ function setup() {
 class Hole {
   constructor() {
     const holeW = 80
-    this.x = windowWidth / 2 - holeW / 2
+    this.x = 0 - holeW
     this.y = windowHeight - lineGap
     this.w = holeW
     this.h = 4
