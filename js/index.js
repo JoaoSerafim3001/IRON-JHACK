@@ -5,6 +5,7 @@ let jackImg
 let horizontalLine
 let holes = []
 let lineGap = 80
+let gameSpeed = 5
 
 let gameSpeed = 5
 let score = 0
@@ -45,6 +46,7 @@ class Hole {
 
     if (this.x > windowWidth) {
       this.x = 0 - this.w
+      this.y++
     }
   }
 }

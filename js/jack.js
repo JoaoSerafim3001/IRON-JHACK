@@ -63,6 +63,10 @@ class Jack {
       this.x = windowWidth
     }
 
+    if (this.y = this.h - lineGap) {
+      score = score + 5
+    }
+
     this.draw();
   }
 }
