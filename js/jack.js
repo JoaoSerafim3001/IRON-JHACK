@@ -5,7 +5,7 @@ class Jack {
     this.x = windowWidth / 2 - this.w / 2
     this.y = windowHeight - this.h
 
-    this.speed = 5
+    this.speed = gameSpeed
   }
 
   draw() {
