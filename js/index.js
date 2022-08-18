@@ -40,12 +40,12 @@ class Hole {
   }
   
   move() {
-    this.x = this.x + 1
+    this.x = this.x + this.speed
 
-  //  if (this.x > windowWidth) {
-  //    this.x = 0 - this.w
-  //  }
+    if (this.x > windowWidth) {
+      this.x = 0 - this.w
     }
+  }
 }
 
 
