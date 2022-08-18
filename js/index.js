@@ -5,12 +5,7 @@ let jack
 let jackImg
 let horizontalLine
 let holes = []
-<<<<<<< HEAD
-let lineGap = windowHeight / 4
-=======
 let lineGap = 80
-let gameSpeed = 5
->>>>>>> f15568bf219b70ce98ae44b0ba19c8aca9b7c8d4
 
 let gameSpeed = 5
 let score = 0
@@ -51,7 +46,7 @@ class Hole {
 
     if (this.x > windowWidth) {
       this.x = 0 - this.w
-      this.y++
+      this.y--
     }
   }
 }
@@ -81,26 +76,6 @@ function draw() {
   jack.moveAndDraw()
   horizontalLine.draw()
   holes.draw()
-<<<<<<< HEAD
-
-  const colliding = collisionBetweenTwoRectangles(horizontalLine, jack)
-  if (colliding) {
-    fill(100)
-    textAlign(CENTER, CENTER)
-    text('COLLIDES')
-  }
-}
-
-function collisionBetweenTwoRectangles(rect1, rect2) {
-  return (
-    rect1.x < rect2.x + rect2.w &&
-    rect1.x + rect1.w > rect2.x &&
-    rect1.y < rect2.y + rect2.h &&
-    rect1.h + rect1.y > rect2.y
-  );
-=======
-  holes.move()
->>>>>>> f15568bf219b70ce98ae44b0ba19c8aca9b7c8d4
 }
 
 function windowResized() {
