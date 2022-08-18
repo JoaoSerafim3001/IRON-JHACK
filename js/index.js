@@ -6,6 +6,7 @@ let horizontalLine
 let holes = []
 let lineGap = 80
 
+let gameSpeed = 5
 let score = 0
 
 
@@ -40,7 +41,7 @@ class Hole {
   }
   
   move() {
-    this.x = this.x + this.speed
+    this.x = this.x + gameSpeed
 
     if (this.x > windowWidth) {
       this.x = 0 - this.w
