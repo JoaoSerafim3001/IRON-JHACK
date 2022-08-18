@@ -1,4 +1,4 @@
-# JumpingJackGame
+# Iron Jhack
 
 ![Jumping Jack](assets/000000000.jpg)
 
