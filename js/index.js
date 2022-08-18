@@ -40,7 +40,7 @@ class Hole {
   }
   
   move() {
-    this.x = this.x + this.speed
+    this.x = this.x + 1
 
   //  if (this.x > windowWidth) {
   //    this.x = 0 - this.w
