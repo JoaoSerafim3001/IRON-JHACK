@@ -37,16 +37,15 @@ class Hole {
     rect(this.x, this.y, this.w, this.h)
     rect(this.x, this.y - lineGap, this.w, this.h)
     rect(this.x, this.y - lineGap * 2, this.w, this.h)
-
   }
-
-
+  
   move() {
     this.x = this.x + this.speed
 
-    if (this.x > windowWidth) {
-      this.x = 0 - this.w
-    }  }
+  //  if (this.x > windowWidth) {
+  //    this.x = 0 - this.w
+  //  }
+    }
 }
 
 
