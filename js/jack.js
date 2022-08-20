@@ -22,17 +22,45 @@ class Jack {
     // rect(this.x+this.w/6, this.y - this.w, this.w / 1.5, this.h, 0, 0, this.w / 5, this.w / 5)
   }
 
-  moveLeft() {
+  move() {
     if (keyIsDown(LEFT_ARROW)) {
       this.x -= this.speed
+
+    } else if
+      (keyIsDown(RIGHT_ARROW)) {
+      this.x += this.speed
+    }
+
+    if (this.x > windowWidth) {
+      this.x = 0 - this.w
+    }
+
+    if (this.x + this.w < 0) {
+      this.x = windowWidth
     }
   }
 
-  moveRight() {
-    if (keyIsDown(RIGHT_ARROW)) {
-      this.x += this.speed
-    }
-  }
+  // moveLeft() {
+  //   if (keyIsDown(LEFT_ARROW)) {
+  //     this.x -= this.speed
+  //     image(jackImg, this.x, this.y, this.w, this.h)
+
+  //   }
+
+  //   if (this.x > windowWidth) {
+  //     this.x = 0 - this.w
+  //   }
+  // }
+
+  // moveRight() {
+  //   if (keyIsDown(RIGHT_ARROW)) {
+  //     this.x += this.speed
+  //   }
+
+  //   if (this.x + this.w < 0) {
+  //     this.x = windowWidth
+  //   }
+  // }
 
   // JUMP //
 
@@ -42,7 +70,6 @@ class Jack {
   //   }
   // }
 
-
   keyPressed() {
     if (keyCode === 32) {
       this.y = windowHeight - this.h - lineGap
@@ -50,23 +77,11 @@ class Jack {
   }
 
   moveAndDraw() {
-    this.moveRight();
-    this.moveLeft();
+    this.move()
+    // this.moveRight()
+    // this.moveLeft()
     // this.jump()
     this.keyPressed()
-
-    if (this.x > windowWidth) {
-      this.x = 0 - this.w
-    }
-
-    if (this.x + this.w < 0) {
-      this.x = windowWidth
-    }
-
-    if (this.y = this.h - lineGap) {
-      score = score + 5
-    }
-
     this.draw();
   }
 }

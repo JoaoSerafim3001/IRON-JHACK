@@ -3,32 +3,32 @@ let windowHeight = window.innerHeight
 let bgColor = 'lightGrey'
 let jack
 let jackImg
+let jackImgLeft
 let horizontalLine
 let holes = []
-let lineGap = 80
+let lineGap = windowHeight / 8
 
 let gameSpeed = 5
 let score = 0
-
+let timer = 60
 
 function preload() {
-  jackImg = loadImage('assets/jack.png')
+  jackImg = loadImage('assets/jhack.png')
 }
-
 
 function setup() {
   const canvas = createCanvas(windowWidth, windowHeight)
   canvas.parent('gameBoard')
   jack = new Jack()
   horizontalLine = new Line()
-  holes = new Hole()
+  setInterval(() => { holes.push(new Hole()) }, 10000)
 }
 
 class Hole {
   constructor() {
     const holeW = 80
     this.x = 0 - holeW
-    this.y = windowHeight - lineGap
+    this.y = windowHeight
     this.w = holeW
     this.h = 4
   }
@@ -37,25 +37,27 @@ class Hole {
     fill(bgColor)
     stroke(bgColor)
     rect(this.x, this.y, this.w, this.h)
-    rect(this.x, this.y - lineGap, this.w, this.h)
-    rect(this.x, this.y - lineGap * 2, this.w, this.h)
   }
-  
+
   move() {
     this.x = this.x + gameSpeed
 
     if (this.x > windowWidth) {
       this.x = 0 - this.w
-      this.y--
+      this.y = this.y + lineGap
+    }
+
+    if (this.y > windowHeight - lineGap) {
+      this.y = 0 + lineGap
     }
   }
 }
 
-
-
-
 function draw() {
   background(bgColor)
+  holes = holes.filter((hole) => {
+    hole.y += 1
+  })
 
   // GROUND //
 
@@ -65,17 +67,37 @@ function draw() {
   // line(x1, y1, x2, y2)
 
   // SCORE TEXT //
-  fill(0,155,255);
+  fill(0, 155, 255);
   noStroke()
-  textAlign(CENTER)
-  textFont('Helvetica')
+  textAlign(LEFT)
+  textFont('zx_spectrum-7')
   textStyle('bold')
   textSize(20)
-  text(`SCORE: ${score}`, 0, 20, width);
+  text(`SCORE:${score}`, 5, 20);
+
+  // TIME TEXT //
+  fill(0, 155, 255);
+  noStroke()
+  textAlign(RIGHT)
+  textFont('zx_spectrum-7')
+  textStyle('bold')
+  textSize(20)
+  text(`TIME:${timer}`, windowWidth - 5, 20);
+
+  if (frameCount % 60 === 0 && timer > 0) {
+    timer--
+  }
+  if (timer === 0) {
+    textAlign(CENTER, CENTER)
+    text('GAME OVER', width / 2, height * 0.3)
+  }
 
   jack.moveAndDraw()
   horizontalLine.draw()
-  holes.draw()
+  holes.forEach((hole) => {
+    hole.draw()
+    hole.move()
+  })
 }
 
 function windowResized() {
