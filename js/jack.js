@@ -1,17 +1,17 @@
 class Jack {
   constructor() {
-    this.w = 30
-    this.h = this.w * 2
-    this.x = windowWidth / 2 - this.w / 2
-    this.y = windowHeight - this.h
-
-    this.speed = gameSpeed
+    this.w = 30;
+    this.h = this.w * 2;
+    this.x = windowW / 2 - this.w / 2;
+    this.y = windowH - this.h;
+    this.floor = 0;
+    this.speed = gameSpeed;
   }
 
   draw() {
-    noStroke()
-    fill(0)
-    image(jackImg, this.x, this.y, this.w, this.h)
+    noStroke();
+    fill(0);
+    image(jackImg, this.x, this.y, this.w, this.h);
 
     // This draws a man icon shape
 
@@ -24,64 +24,31 @@ class Jack {
 
   move() {
     if (keyIsDown(LEFT_ARROW)) {
-      this.x -= this.speed
-
-    } else if
-      (keyIsDown(RIGHT_ARROW)) {
-      this.x += this.speed
+      this.x -= this.speed;
+    } else if (keyIsDown(RIGHT_ARROW)) {
+      this.x += this.speed;
     }
 
-    if (this.x > windowWidth) {
-      this.x = 0 - this.w
+    if (this.x > windowW) {
+      this.x = 0 - this.w;
     }
 
     if (this.x + this.w < 0) {
-      this.x = windowWidth
+      this.x = windowW;
+    }
+
+    // PLAYER REACHES TOP LINE //
+    if (this.y < 0) {
+      win();
     }
   }
 
-  // moveLeft() {
-  //   if (keyIsDown(LEFT_ARROW)) {
-  //     this.x -= this.speed
-  //     image(jackImg, this.x, this.y, this.w, this.h)
-
-  //   }
-
-  //   if (this.x > windowWidth) {
-  //     this.x = 0 - this.w
-  //   }
-  // }
-
-  // moveRight() {
-  //   if (keyIsDown(RIGHT_ARROW)) {
-  //     this.x += this.speed
-  //   }
-
-  //   if (this.x + this.w < 0) {
-  //     this.x = windowWidth
-  //   }
-  // }
-
-  // JUMP //
-
-  // jump() {
-  //   if (keyIsDown(UP_ARROW)) {
-  //     this.y = this.y - lineGap
-  //   }
-  // }
-
-  keyPressed() {
-    if (keyCode === 32) {
-      this.y = windowHeight - this.h - lineGap
-    }
+  jump() {
+    this.y -= lineGap;
   }
 
   moveAndDraw() {
-    this.move()
-    // this.moveRight()
-    // this.moveLeft()
-    // this.jump()
-    this.keyPressed()
+    this.move();
     this.draw();
   }
 }
