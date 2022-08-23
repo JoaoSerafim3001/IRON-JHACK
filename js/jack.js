@@ -1,17 +1,20 @@
 class Jack {
   constructor() {
-    this.w = 30;
-    this.h = this.w * 2;
+    this.h = lineGap - 20;
+    this.w = this.h / 2;
+    // this.w = 30;
+    // this.h = this.w * 2;
     this.x = windowW / 2 - this.w / 2;
     this.y = windowH - this.h;
     this.floor = 0;
     this.speed = gameSpeed;
+    this.img = jackImg;
   }
 
   draw() {
     noStroke();
     fill(0);
-    image(jackImg, this.x, this.y, this.w, this.h);
+    image(this.img, this.x, this.y, this.w, this.h);
 
     // This draws a man icon shape
 
@@ -25,8 +28,12 @@ class Jack {
   move() {
     if (keyIsDown(LEFT_ARROW)) {
       this.x -= this.speed;
+      this.img = jackImgLeft;
     } else if (keyIsDown(RIGHT_ARROW)) {
       this.x += this.speed;
+      this.img = jackImgRight;
+    } else {
+      this.img = jackImg;
     }
 
     if (this.x > windowW) {
@@ -39,7 +46,7 @@ class Jack {
 
     // PLAYER REACHES TOP LINE //
     if (this.y < 0) {
-      win();
+      gameState = "win";
     }
   }
 

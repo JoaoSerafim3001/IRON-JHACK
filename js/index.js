@@ -7,36 +7,110 @@ let jackImgLeft;
 let horizontalLine;
 let holes = [];
 let lineGap = windowH / 8;
-let holeW = 70;
+let holeW = lineGap;
 
 const ironHackBlue = "#009bff";
 
 let gameSpeed = 4;
 let score = 0;
-let gameTime = 60;
+let gameTime = 100;
 let bonusTime = 10;
 
 let spaceBarKey = 32;
+let gameState = "playing";
 
 function preload() {
   jackImg = loadImage("assets/images/jhack.png");
+  jackImgLeft = loadImage("assets/images/jhack_left.png");
+  jackImgRight = loadImage("assets/images/jhack_right.png");
 }
 
 function setup() {
   const canvas = createCanvas(windowW, windowH);
   canvas.parent("game-board");
-  jack = new Jack();
-  horizontalLine = new Line();
-  holes.push(new Hole(random(0, windowW), lineGap * 6, "right"));
-  holes.push(new Hole(random(0, windowW), lineGap * 3, "left"));
+  initializeGame();
   noLoop();
 }
 
 function draw() {
+  if (gameState === "playing") {
+    playGame();
+    return;
+  }
+  if (gameState === "gameover") {
+    gameOver();
+  }
+  if (gameState === "win") {
+    win();
+  }
+}
+function getHolesDirectlyAbove() {
+  return holes.filter((hole) => {
+    const dif = jack.y - hole.y;
+    // const difBelow = jack.y + jack.h + hole.y;
+    if (dif < 0 || dif > lineGap) {
+      return false;
+    }
+    return true;
+  });
+}
+
+// function getHolesDirectlyBelow() {
+//   return hole.filter((hole) => {
+//     const difBelow = jack.y - hole.y;
+//     if (difBelow < 0 && difBelow > lineGap) {
+//       return true;
+//     }
+//     if (difBelow > lineGap) {
+//       return false;
+//     }
+//     return false;
+//   });
+// }
+
+function collidesHoleBelow() {
+  const holesDirectyBelowUs = getHolesDirectlyBelow();
+  const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
+    return collisionDetection(hole, jack);
+  });
+  if (collidingHoleBelow) {
+    jack.y += lineGap;
+  }
+}
+
+function keyPressed() {
+  if (keyCode === spaceBarKey || keyCode === UP_ARROW) {
+    const holesDirectyAboveUs = getHolesDirectlyAbove();
+    const collidingHole = holesDirectyAboveUs.find((hole) => {
+      return collisionDetection(hole, jack);
+    });
+    if (collidingHole) {
+      jack.jump();
+      holes.push(
+        new Hole(random(0, windowW), floor(random(9)) * lineGap, "right"),
+        new Hole(random(0, windowW), floor(random(9)) * lineGap, "left")
+      );
+      score = score + 5;
+    }
+  }
+}
+
+function collisionDetection(rect1, rect2) {
+  return rect1.x < rect2.x && rect1.x + rect1.w > rect2.x + rect2.w;
+}
+
+function windowResized() {
+  resizeCanvas(windowW, windowH);
+}
+
+window.onload = () => {
+  document.getElementById("start-button").onclick = () => {
+    startGame();
+  };
+};
+
+function playGame() {
   background(bgColor);
-
-  // GROUND //
-
   // SCORE //
   fill(ironHackBlue);
   noStroke();
@@ -58,8 +132,7 @@ function draw() {
     gameTime--;
   }
   if (gameTime === 0) {
-    gameOver();
-    restartGame();
+    gameState = "gameover";
   }
 
   jack.moveAndDraw();
@@ -70,65 +143,6 @@ function draw() {
   });
 }
 
-// function removeHoles() {
-//   return holes.filter((hole) => {
-//     hole.x + hole.w < windowW;
-//     if (!inScreen) {
-//       score++;
-//     }
-//     return inScreen;
-//   });
-// }
-
-function getHolesDirectlyAbove() {
-  return holes.filter((hole) => {
-    const dif = jack.y - hole.y;
-    // const difBelow = jack.y + jack.h + hole.y;
-    if (dif < 0) {
-      return false;
-    }
-    if (dif > lineGap) {
-      return false;
-    }
-    return true;
-  });
-}
-
-function keyPressed() {
-  if (keyCode === spaceBarKey || keyCode === UP_ARROW) {
-    const holesDirectyAboveUs = getHolesDirectlyAbove();
-    const collidingHole = holesDirectyAboveUs.find((hole) => {
-      return collisionDetection(hole, jack);
-    });
-    if (collidingHole) {
-      jack.jump();
-      holes.push(new Hole(random(0, windowW), jack.y + jack.h - lineGap * 3));
-      score = score + 5;
-    }
-  }
-}
-
-function collisionDetection(rect1, rect2) {
-  return rect1.x < rect2.x && rect1.x + rect1.w > rect2.x + rect2.w;
-}
-
-function windowResized() {
-  resizeCanvas(windowW, windowH);
-}
-
-window.onload = () => {
-  document.getElementById("start-button").onclick = () => {
-    startGame();
-  };
-};
-
-function restartGame() {
-  if (keyIsDown(82)) {
-    console.log("tecla r");
-    return startGame();
-  }
-}
-
 function startGame() {
   const gameIntro = document.getElementsByClassName("game-intro");
   gameIntro[0].classList.toggle("hidden");
@@ -137,36 +151,49 @@ function startGame() {
   loop();
 }
 
+function initializeGame() {
+  gameState = "playing";
+  jack = new Jack();
+  horizontalLine = new Line();
+  holes.push(new Hole(random(0, windowW), lineGap * 6, "right"));
+  holes.push(new Hole(random(0, windowW), lineGap * 2, "left"));
+}
+
 function gameOver() {
-  // noLoop();
-  textSize(30);
+  background(bgColor);
+  noStroke();
+  textSize(40);
   textAlign(CENTER, CENTER);
   fill("black");
-  text("TIME UP!", width / 2, height / 2 - lineGap / 2);
+  text("TIME UP", width / 2, height / 2 - lineGap / 2);
   textSize(20);
-  text(
-    `SCORE:${score} · TIME BONUS:${gameTime * bonusTime}`,
-    width / 2,
-    height / 2 + lineGap / 2
-  );
-  text(`YOU SCORED:${score}`, width / 2, height / 2 + lineGap + lineGap / 2);
-  restartGame();
-  // text(
-  //   "PRESS ENTER TO RESTART THE GAME",
-  //   width / 2,
-  //   height / 2 + (lineGap * 2) / 2
-  // );
+  // text(`SCORE:${score}`, width / 2, height / 2 + (lineGap * 2) / 2);
+  text(`YOU SCORED:${score}`, width / 2, height / 2 + lineGap / 2);
+  fill(ironHackBlue);
 
-  // if (keyIsDown(13)) {
-  //   return setup();
+  text(
+    "PRESS ENTER TO RESTART THE GAME",
+    width / 2,
+    height / 2 + (lineGap * 4) / 2
+  );
+  restartGame();
 }
 
 function win() {
-  noLoop();
-  textSize(30);
+  background(bgColor);
+  noStroke();
+  image(
+    jackImg,
+    width / 2 - jack.w / 2,
+    height / 4,
+    jack.w * 1.5,
+    jack.h * 1.5
+  );
+  textSize(40);
   textAlign(CENTER, CENTER);
   fill(ironHackBlue);
-  text("YOU WIN", width / 2, height / 2 - lineGap / 2);
+  text("YOU WIN!", width / 2, height / 2 - lineGap / 2);
+  fill("black");
   textSize(20);
   text(
     `SCORE:${score} · TIME BONUS:${gameTime * bonusTime}`,
@@ -176,16 +203,20 @@ function win() {
   text(
     `YOU SCORED:${score + gameTime * bonusTime}`,
     width / 2,
-    height / 2 + lineGap + lineGap / 2
+    height / 2 + (lineGap * 2) / 2
+  );
+  fill(ironHackBlue);
+  text(
+    "PRESS ENTER TO RESTART THE GAME",
+    width / 2,
+    height / 2 + (lineGap * 4) / 2
   );
   restartGame();
-  // text(
-  //   "PRESS ENTER TO RESTART THE GAME",
-  //   width / 2,
-  //   height / 2 + (lineGap * 2) / 2
-  // );
+}
 
-  // if (keyIsDown(13)) {
-  //   return setup();
-  // }
+function restartGame() {
+  if (keyIsDown(ENTER)) {
+    initializeGame();
+    loop();
+  }
 }

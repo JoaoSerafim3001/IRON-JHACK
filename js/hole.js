@@ -37,11 +37,6 @@ class Hole {
       if (this.y < 0) {
         this.y = windowHeight - lineGap;
       }
-
-      // if (this.x > windowWidth) {
-      //   this.x = 0 - this.w;
-      //   this.y = this.y + lineGap;
-      // }
     }
   }
 }
