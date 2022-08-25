@@ -47,7 +47,6 @@ function draw() {
 function getHolesDirectlyAbove() {
   return holes.filter((hole) => {
     const dif = jack.y - hole.y;
-    // const difBelow = jack.y + jack.h + hole.y;
     if (dif < 0 || dif > lineGap) {
       return false;
     }
@@ -55,22 +54,23 @@ function getHolesDirectlyAbove() {
   });
 }
 
-// function getHolesDirectlyBelow() {
-//   return hole.filter((hole) => {
-//     const difBelow = jack.y - hole.y;
-//     if (difBelow < 0 && difBelow > lineGap) {
-//       return true;
-//     }
-//     if (difBelow > lineGap) {
-//       return false;
-//     }
-//     return false;
-//   });
-// }
+function getHolesDirectlyBelow() {
+  return holes.filter((hole) => {
+    const difBelow = hole.y - jack.y;
+    console.log("I am an hole below",difBelow)
+
+    if (difBelow < 0) {
+      return false;
+    }
+    return true;
+  });
+}
 
 function collidesHoleBelow() {
+  console.log("collidesHoleBelow")
   const holesDirectyBelowUs = getHolesDirectlyBelow();
   const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
+
     return collisionDetection(hole, jack);
   });
   if (collidingHoleBelow) {
@@ -82,6 +82,7 @@ function keyPressed() {
   if (keyCode === spaceBarKey || keyCode === UP_ARROW) {
     const holesDirectyAboveUs = getHolesDirectlyAbove();
     const collidingHole = holesDirectyAboveUs.find((hole) => {
+      console.log(holesDirectyAboveUs)
       return collisionDetection(hole, jack);
     });
     if (collidingHole) {
@@ -135,6 +136,7 @@ function playGame() {
     gameState = "gameover";
   }
 
+  collidesHoleBelow()
   jack.moveAndDraw();
   horizontalLine.draw();
   holes.forEach((hole) => {
