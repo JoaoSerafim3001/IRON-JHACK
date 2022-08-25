@@ -13,22 +13,34 @@ const ironHackBlue = "#009bff";
 
 let gameSpeed = 4;
 let score = 0;
-let gameTime = 100;
+let gameTime = 5;
 let bonusTime = 10;
 
 let spaceBarKey = 32;
 let gameState = "playing";
 
+let bgMusic;
+let jumpSound;
+let winSound;
+let loseSound;
+let moveSound;
+
 function preload() {
   jackImg = loadImage("assets/images/jhack.png");
   jackImgLeft = loadImage("assets/images/jhack_left.png");
   jackImgRight = loadImage("assets/images/jhack_right.png");
+  bgMusic = loadSound("assets/sounds/bgMusic.mp3");
+  jumpSound = loadSound("assets/sounds/jump.mp3");
+  winSound = loadSound("assets/sounds/win.wav");
+  loseSound = loadSound("assets/sounds/lose.mp3");
+  moveSound = loadSound("assets/sounds/move.mp3");
 }
 
 function setup() {
   const canvas = createCanvas(windowW, windowH);
   canvas.parent("game-board");
   initializeGame();
+  soundFormats("mp3", "wav");
   noLoop();
 }
 
@@ -54,35 +66,36 @@ function getHolesDirectlyAbove() {
   });
 }
 
-function getHolesDirectlyBelow() {
-  return holes.filter((hole) => {
-    const difBelow = hole.y - jack.y;
-    console.log("I am an hole below",difBelow)
+// TRYING TO GET HOLES BELOW //
 
-    if (difBelow < 0) {
-      return false;
-    }
-    return true;
-  });
-}
+// function getHolesDirectlyBelow() {
+//   return holes.filter((hole) => {
+//     const difBelow = hole.y - jack.y;
+//     console.log("I am an hole below",difBelow)
 
-function collidesHoleBelow() {
-  console.log("collidesHoleBelow")
-  const holesDirectyBelowUs = getHolesDirectlyBelow();
-  const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
+//     if (difBelow < 0) {
+//       return false;
+//     }
+//     return true;
+//   });
+// }
 
-    return collisionDetection(hole, jack);
-  });
-  if (collidingHoleBelow) {
-    jack.y += lineGap;
-  }
-}
+// function collidesHoleBelow() {
+//   console.log("collidesHoleBelow")
+//   const holesDirectyBelowUs = getHolesDirectlyBelow();
+//   const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
+
+//     return collisionDetection(hole, jack);
+//   });
+//   if (collidingHoleBelow) {
+//     jack.y += lineGap;
+//   }
+// }
 
 function keyPressed() {
   if (keyCode === spaceBarKey || keyCode === UP_ARROW) {
     const holesDirectyAboveUs = getHolesDirectlyAbove();
     const collidingHole = holesDirectyAboveUs.find((hole) => {
-      console.log(holesDirectyAboveUs)
       return collisionDetection(hole, jack);
     });
     if (collidingHole) {
@@ -136,7 +149,6 @@ function playGame() {
     gameState = "gameover";
   }
 
-  collidesHoleBelow()
   jack.moveAndDraw();
   horizontalLine.draw();
   holes.forEach((hole) => {
@@ -150,6 +162,8 @@ function startGame() {
   gameIntro[0].classList.toggle("hidden");
   const gameBoard = document.getElementById("game-board");
   gameBoard.classList.toggle("hidden");
+  bgMusic.setVolume(0.4);
+  bgMusic.loop();
   loop();
 }
 
@@ -162,6 +176,7 @@ function initializeGame() {
 }
 
 function gameOver() {
+  bgMusic.stop();
   background(bgColor);
   noStroke();
   textSize(40);
@@ -182,6 +197,7 @@ function gameOver() {
 }
 
 function win() {
+  bgMusic.stop();
   background(bgColor);
   noStroke();
   image(

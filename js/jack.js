@@ -29,9 +29,11 @@ class Jack {
     if (keyIsDown(LEFT_ARROW)) {
       this.x -= this.speed;
       this.img = jackImgLeft;
+      // jackIsMoving();
     } else if (keyIsDown(RIGHT_ARROW)) {
       this.x += this.speed;
       this.img = jackImgRight;
+      // jackIsMoving();
     } else {
       this.img = jackImg;
     }
@@ -46,12 +48,16 @@ class Jack {
 
     // PLAYER REACHES TOP LINE //
     if (this.y < 0) {
+      winSound.setVolume(0.5);
+      winSound.play();
       gameState = "win";
     }
   }
 
   jump() {
     this.y -= lineGap;
+    jumpSound.setVolume(0.3);
+    jumpSound.play();
   }
 
   moveAndDraw() {
@@ -59,3 +65,13 @@ class Jack {
     this.draw();
   }
 }
+
+// function jackIsMoving() {
+//   const moveLeft = (this.x -= this.speed);
+//   const moveRight = (this.x += this.speed);
+//   if (this.x === moveLeft || this.x === moveRight) {
+//     moveSound.play();
+//   } else {
+//     moveSound.pause();
+//   }
+// }
