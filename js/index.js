@@ -8,12 +8,13 @@ let horizontalLine;
 let holes = [];
 let lineGap = windowH / 8;
 let holeW = lineGap;
+let jumpingTime;
 
 const ironHackBlue = "#009bff";
 
 let gameSpeed = 4;
-let score = 0;
-let gameTime = 5;
+let score;
+let gameTime;
 let bonusTime = 10;
 
 let spaceBarKey = 32;
@@ -32,7 +33,7 @@ function preload() {
   bgMusic = loadSound("assets/sounds/bgMusic.mp3");
   jumpSound = loadSound("assets/sounds/jump.mp3");
   winSound = loadSound("assets/sounds/win.wav");
-  loseSound = loadSound("assets/sounds/lose.mp3");
+  loseSound = loadSound("assets/sounds/lose.wav");
   moveSound = loadSound("assets/sounds/move.mp3");
 }
 
@@ -68,29 +69,24 @@ function getHolesDirectlyAbove() {
 
 // TRYING TO GET HOLES BELOW //
 
-// function getHolesDirectlyBelow() {
-//   return holes.filter((hole) => {
-//     const difBelow = hole.y - jack.y;
-//     console.log("I am an hole below",difBelow)
+function getHolesDirectlyBelow() {
+  return holes.filter((hole) => {
+    if (jack.y + jack.h === hole.y) {
+      return true;
+    }
+    return false;
+  });
+}
 
-//     if (difBelow < 0) {
-//       return false;
-//     }
-//     return true;
-//   });
-// }
-
-// function collidesHoleBelow() {
-//   console.log("collidesHoleBelow")
-//   const holesDirectyBelowUs = getHolesDirectlyBelow();
-//   const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
-
-//     return collisionDetection(hole, jack);
-//   });
-//   if (collidingHoleBelow) {
-//     jack.y += lineGap;
-//   }
-// }
+function collidesHoleBelow() {
+  const holesDirectyBelowUs = getHolesDirectlyBelow();
+  const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
+    return collisionDetection(hole, jack);
+  });
+  if (collidingHoleBelow && new Date() - jumpingTime > 1000) {
+    jack.y += lineGap;
+  }
+}
 
 function keyPressed() {
   if (keyCode === spaceBarKey || keyCode === UP_ARROW) {
@@ -100,6 +96,7 @@ function keyPressed() {
     });
     if (collidingHole) {
       jack.jump();
+      jumpingTime = new Date();
       holes.push(
         new Hole(random(0, windowW), floor(random(9)) * lineGap, "right"),
         new Hole(random(0, windowW), floor(random(9)) * lineGap, "left")
@@ -146,6 +143,7 @@ function playGame() {
     gameTime--;
   }
   if (gameTime === 0) {
+    loseSound.play();
     gameState = "gameover";
   }
 
@@ -155,6 +153,8 @@ function playGame() {
     hole.draw();
     hole.move();
   });
+
+  collidesHoleBelow();
 }
 
 function startGame() {
@@ -168,11 +168,13 @@ function startGame() {
 }
 
 function initializeGame() {
+  gameTime = 60;
+  score = 0;
   gameState = "playing";
   jack = new Jack();
   horizontalLine = new Line();
   holes.push(new Hole(random(0, windowW), lineGap * 6, "right"));
-  holes.push(new Hole(random(0, windowW), lineGap * 2, "left"));
+  holes.push(new Hole(random(0, windowW), lineGap, "left"));
 }
 
 function gameOver() {
