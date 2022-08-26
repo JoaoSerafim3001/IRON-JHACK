@@ -5,7 +5,6 @@ let jack;
 let jackImg;
 let jackImgLeft;
 let horizontalLine;
-let holes = [];
 let lineGap = windowH / 8;
 let holeW = lineGap;
 let jumpingTime;
@@ -25,21 +24,25 @@ let jumpSound;
 let winSound;
 let loseSound;
 let moveSound;
+let gameMusic = "OFF";
 
 function preload() {
   jackImg = loadImage("assets/images/jhack.png");
   jackImgLeft = loadImage("assets/images/jhack_left.png");
   jackImgRight = loadImage("assets/images/jhack_right.png");
+  gameMusicImg = loadImage("assets/images/extra.png");
   bgMusic = loadSound("assets/sounds/bgMusic.mp3");
   jumpSound = loadSound("assets/sounds/jump.mp3");
   winSound = loadSound("assets/sounds/win.wav");
   loseSound = loadSound("assets/sounds/lose.wav");
   moveSound = loadSound("assets/sounds/move.mp3");
+  fallSound = loadSound("assets/sounds/fall1.mp3");
 }
 
 function setup() {
   const canvas = createCanvas(windowW, windowH);
   canvas.parent("game-board");
+  bgMusic.setVolume(0.2);
   initializeGame();
   soundFormats("mp3", "wav");
   noLoop();
@@ -85,6 +88,8 @@ function collidesHoleBelow() {
   });
   if (collidingHoleBelow && new Date() - jumpingTime > 1000) {
     jack.y += lineGap;
+    fallSound.setVolume(0.3);
+    fallSound.play();
   }
 }
 
@@ -104,7 +109,24 @@ function keyPressed() {
       score = score + 5;
     }
   }
+  // if (keyCode === 77) {
+  //   toggleGameMusic();
+  // }
+  // }
 }
+
+function keyTyped() {
+  if (key === "m") {
+    toggleGameMusic();
+  }
+}
+
+// function keyReleased() {
+//   if (key === "m") {
+//     gameMusic = "OFF";
+//     bgMusic.loop();
+//   }
+// }
 
 function collisionDetection(rect1, rect2) {
   return rect1.x < rect2.x && rect1.x + rect1.w > rect2.x + rect2.w;
@@ -143,9 +165,18 @@ function playGame() {
     gameTime--;
   }
   if (gameTime === 0) {
+    loseSound.setVolume(0.3);
     loseSound.play();
     gameState = "gameover";
   }
+
+  fill("grey");
+  noStroke();
+  textAlign(CENTER);
+  textFont("zx_spectrum-7");
+  textStyle("bold");
+  textSize(20);
+  text(`M:MUSIC ${gameMusic}`, width / 2, 20);
 
   jack.moveAndDraw();
   horizontalLine.draw();
@@ -162,7 +193,6 @@ function startGame() {
   gameIntro[0].classList.toggle("hidden");
   const gameBoard = document.getElementById("game-board");
   gameBoard.classList.toggle("hidden");
-  bgMusic.setVolume(0.4);
   bgMusic.loop();
   loop();
 }
@@ -170,6 +200,7 @@ function startGame() {
 function initializeGame() {
   gameTime = 60;
   score = 0;
+  holes = [];
   gameState = "playing";
   jack = new Jack();
   horizontalLine = new Line();
@@ -186,7 +217,6 @@ function gameOver() {
   fill("black");
   text("TIME UP", width / 2, height / 2 - lineGap / 2);
   textSize(20);
-  // text(`SCORE:${score}`, width / 2, height / 2 + (lineGap * 2) / 2);
   text(`YOU SCORED:${score}`, width / 2, height / 2 + lineGap / 2);
   fill(ironHackBlue);
 
@@ -234,9 +264,19 @@ function win() {
   restartGame();
 }
 
+function toggleGameMusic() {
+  if (!bgMusic.isPlaying()) {
+    bgMusic.play();
+    gameMusic = "OFF";
+  } else {
+    bgMusic.pause();
+    gameMusic = "ON";
+  }
+}
+
 function restartGame() {
   if (keyIsDown(ENTER)) {
     initializeGame();
-    loop();
+    // loop();
   }
 }
