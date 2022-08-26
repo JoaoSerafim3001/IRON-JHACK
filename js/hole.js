@@ -4,6 +4,8 @@ class Hole {
     this.y = y;
     this.w = holeW;
     this.h = 5;
+    this.img = jackImg;
+
     this.direction = direction;
   }
 

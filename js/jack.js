@@ -2,8 +2,6 @@ class Jack {
   constructor() {
     this.h = lineGap - 20;
     this.w = this.h / 2;
-    // this.w = 30;
-    // this.h = this.w * 2;
     this.x = windowW / 2 - this.w / 2;
     this.y = windowH - this.h;
     this.floor = 0;
@@ -12,12 +10,12 @@ class Jack {
   }
 
   draw() {
-    noStroke();
-    fill(0);
     image(this.img, this.x, this.y, this.w, this.h);
 
-    // This draws a man icon shape
+    // This draws a man icon shape //
 
+    // noStroke();
+    // fill(0);
     // ellipse(this.x + this.w / 2, this.y - this.h * 2.5, this.w/1.5, this.w/1.5)
     // fill(0)
     // rect(this.x, this.y - this.w * 2, this.w, this.h, this.w / 5, this.w / 5, this.w / 5,this.w / 5)
