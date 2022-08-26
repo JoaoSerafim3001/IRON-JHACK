@@ -2,10 +2,9 @@ let windowW = window.innerWidth;
 let windowH = window.innerHeight;
 let bgColor = "lightgray";
 let jack;
-let jackImg;
-let jackImgLeft;
+let enemies;
 let horizontalLine;
-let holes = [];
+let holes;
 let lineGap = windowH / 8;
 let holeW = lineGap;
 let jumpingTime;
@@ -30,8 +29,10 @@ function preload() {
   jackImg = loadImage("assets/images/jhack.png");
   jackImgLeft = loadImage("assets/images/jhack_left.png");
   jackImgRight = loadImage("assets/images/jhack_right.png");
+  enemy3Img = loadImage("assets/images/enemy3.png");
   bgMusic = loadSound("assets/sounds/bgMusic.mp3");
   jumpSound = loadSound("assets/sounds/jump.mp3");
+  fallSound = loadSound("assets/sounds/fall1.mp3");
   winSound = loadSound("assets/sounds/win.wav");
   loseSound = loadSound("assets/sounds/lose.wav");
   moveSound = loadSound("assets/sounds/move.mp3");
@@ -83,8 +84,9 @@ function collidesHoleBelow() {
   const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
     return collisionDetection(hole, jack);
   });
-  if (collidingHoleBelow && new Date() - jumpingTime > 1000) {
+  if (collidingHoleBelow && new Date() - jumpingTime > 600) {
     jack.y += lineGap;
+    fallSound.play();
   }
 }
 
@@ -153,7 +155,6 @@ function playGame() {
     hole.draw();
     hole.move();
   });
-
   collidesHoleBelow();
 }
 
@@ -162,14 +163,16 @@ function startGame() {
   gameIntro[0].classList.toggle("hidden");
   const gameBoard = document.getElementById("game-board");
   gameBoard.classList.toggle("hidden");
-  bgMusic.setVolume(0.4);
-  bgMusic.loop();
   loop();
+  bgMusic.setVolume(0.2);
+  bgMusic.loop();
 }
 
 function initializeGame() {
   gameTime = 60;
   score = 0;
+  holes = [];
+  enemies = [];
   gameState = "playing";
   jack = new Jack();
   horizontalLine = new Line();
@@ -186,7 +189,6 @@ function gameOver() {
   fill("black");
   text("TIME UP", width / 2, height / 2 - lineGap / 2);
   textSize(20);
-  // text(`SCORE:${score}`, width / 2, height / 2 + (lineGap * 2) / 2);
   text(`YOU SCORED:${score}`, width / 2, height / 2 + lineGap / 2);
   fill(ironHackBlue);
 
@@ -236,6 +238,8 @@ function win() {
 
 function restartGame() {
   if (keyIsDown(ENTER)) {
+    bgMusic.setVolume(0.2);
+    bgMusic.loop();
     initializeGame();
     loop();
   }
