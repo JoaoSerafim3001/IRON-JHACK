@@ -2,8 +2,7 @@ let windowW = window.innerWidth;
 let windowH = window.innerHeight;
 let bgColor = "lightgray";
 let jack;
-let jackImg;
-let jackImgLeft;
+let enemies;
 let horizontalLine;
 let lineGap = windowH / 8;
 let holeW = lineGap;
@@ -33,6 +32,7 @@ function preload() {
   gameMusicImg = loadImage("assets/images/extra.png");
   bgMusic = loadSound("assets/sounds/bgMusic.mp3");
   jumpSound = loadSound("assets/sounds/jump.mp3");
+  fallSound = loadSound("assets/sounds/fall1.mp3");
   winSound = loadSound("assets/sounds/win.wav");
   loseSound = loadSound("assets/sounds/lose.wav");
   moveSound = loadSound("assets/sounds/move.mp3");
@@ -86,7 +86,7 @@ function collidesHoleBelow() {
   const collidingHoleBelow = holesDirectyBelowUs.find((hole) => {
     return collisionDetection(hole, jack);
   });
-  if (collidingHoleBelow && new Date() - jumpingTime > 1000) {
+  if (collidingHoleBelow && new Date() - jumpingTime > 600) {
     jack.y += lineGap;
     fallSound.setVolume(0.3);
     fallSound.play();
@@ -120,13 +120,6 @@ function keyTyped() {
     toggleGameMusic();
   }
 }
-
-// function keyReleased() {
-//   if (key === "m") {
-//     gameMusic = "OFF";
-//     bgMusic.loop();
-//   }
-// }
 
 function collisionDetection(rect1, rect2) {
   return rect1.x < rect2.x && rect1.x + rect1.w > rect2.x + rect2.w;
@@ -164,6 +157,7 @@ function playGame() {
   if (frameCount % 60 === 0 && gameTime > 0) {
     gameTime--;
   }
+
   if (gameTime === 0) {
     loseSound.setVolume(0.3);
     loseSound.play();
@@ -184,7 +178,6 @@ function playGame() {
     hole.draw();
     hole.move();
   });
-
   collidesHoleBelow();
 }
 
@@ -194,6 +187,7 @@ function startGame() {
   const gameBoard = document.getElementById("game-board");
   gameBoard.classList.toggle("hidden");
   bgMusic.loop();
+  noCursor();
   loop();
 }
 
@@ -277,6 +271,8 @@ function toggleGameMusic() {
 function restartGame() {
   if (keyIsDown(ENTER)) {
     initializeGame();
-    // loop();
+    bgMusic.setVolume(0.2);
+    bgMusic.loop();
+    initializeGame();
   }
 }
