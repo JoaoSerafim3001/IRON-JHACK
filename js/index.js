@@ -30,6 +30,7 @@ function preload() {
   jackImgLeft = loadImage("assets/images/jhack_left.png");
   jackImgRight = loadImage("assets/images/jhack_right.png");
   gameMusicImg = loadImage("assets/images/extra.png");
+  enemyOneImg = loadImage("assets/images/enemy3.png");
   bgMusic = loadSound("assets/sounds/bgMusic.mp3");
   jumpSound = loadSound("assets/sounds/jump.mp3");
   fallSound = loadSound("assets/sounds/fall1.mp3");
@@ -169,12 +170,19 @@ function playGame() {
   text(`M:MUSIC ${gameMusic}`, width / 2, 20);
 
   jack.moveAndDraw();
+  enemies.draw();
+  enemies.move();
   horizontalLine.draw();
   holes.forEach((hole) => {
     hole.draw();
     hole.move();
   });
   collidesHoleBelow();
+
+  // let enemyDistance = dist(jack.x, jack.y, enemies.x, enemies.y);
+  // if (enemyDistance > 0) {
+  //   jack.y = lineGap;
+  // }
 }
 
 function startGame() {
@@ -196,6 +204,13 @@ function initializeGame() {
   horizontalLine = new Line();
   holes.push(new Hole(random(0, windowW), lineGap * 6, "right"));
   holes.push(new Hole(random(0, windowW), lineGap, "left"));
+
+  enemies = new Enemy(
+    random(0, windowW),
+    floor(random(9)) * lineGap + 15,
+    "right"
+  );
+  // enemies.push(new Enemy(random(0, windowW), lineGap * 6));
 }
 
 function gameOver() {
@@ -266,6 +281,7 @@ function toggleGameMusic() {
 
 function restartGame() {
   if (keyIsDown(ENTER)) {
+    initializeGame();
     bgMusic.setVolume(0.2);
     bgMusic.loop();
     initializeGame();
