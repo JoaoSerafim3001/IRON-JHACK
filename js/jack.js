@@ -46,7 +46,7 @@ class Jack {
 
     // PLAYER REACHES TOP LINE //
     if (this.y < 0) {
-      winSound.setVolume(0.4);
+      winSound.setVolume(0.3);
       winSound.play();
       gameState = "win";
     }

@@ -153,6 +153,7 @@ function playGame() {
   if (frameCount % 60 === 0 && gameTime > 0) {
     gameTime--;
   }
+
   if (gameTime === 0) {
     loseSound.setVolume(0.3);
     loseSound.play();
@@ -182,6 +183,7 @@ function startGame() {
   const gameBoard = document.getElementById("game-board");
   gameBoard.classList.toggle("hidden");
   bgMusic.loop();
+  noCursor();
   loop();
 }
 
@@ -267,6 +269,5 @@ function restartGame() {
     bgMusic.setVolume(0.2);
     bgMusic.loop();
     initializeGame();
-    // loop();
   }
 }
