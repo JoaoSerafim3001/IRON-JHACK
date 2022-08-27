@@ -4,7 +4,6 @@ let bgColor = "lightgray";
 let jack;
 let enemies;
 let horizontalLine;
-let holes;
 let lineGap = windowH / 8;
 let holeW = lineGap;
 let jumpingTime;
@@ -24,23 +23,26 @@ let jumpSound;
 let winSound;
 let loseSound;
 let moveSound;
+let gameMusic = "OFF";
 
 function preload() {
   jackImg = loadImage("assets/images/jhack.png");
   jackImgLeft = loadImage("assets/images/jhack_left.png");
   jackImgRight = loadImage("assets/images/jhack_right.png");
-  enemy3Img = loadImage("assets/images/enemy3.png");
+  gameMusicImg = loadImage("assets/images/extra.png");
   bgMusic = loadSound("assets/sounds/bgMusic.mp3");
   jumpSound = loadSound("assets/sounds/jump.mp3");
   fallSound = loadSound("assets/sounds/fall1.mp3");
   winSound = loadSound("assets/sounds/win.wav");
   loseSound = loadSound("assets/sounds/lose.wav");
   moveSound = loadSound("assets/sounds/move.mp3");
+  fallSound = loadSound("assets/sounds/fall1.mp3");
 }
 
 function setup() {
   const canvas = createCanvas(windowW, windowH);
   canvas.parent("game-board");
+  bgMusic.setVolume(0.2);
   initializeGame();
   soundFormats("mp3", "wav");
   noLoop();
@@ -86,6 +88,7 @@ function collidesHoleBelow() {
   });
   if (collidingHoleBelow && new Date() - jumpingTime > 600) {
     jack.y += lineGap;
+    fallSound.setVolume(0.3);
     fallSound.play();
   }
 }
@@ -105,6 +108,12 @@ function keyPressed() {
       );
       score = score + 5;
     }
+  }
+}
+
+function keyTyped() {
+  if (key === "m") {
+    toggleGameMusic();
   }
 }
 
@@ -145,9 +154,18 @@ function playGame() {
     gameTime--;
   }
   if (gameTime === 0) {
+    loseSound.setVolume(0.3);
     loseSound.play();
     gameState = "gameover";
   }
+
+  fill("grey");
+  noStroke();
+  textAlign(CENTER);
+  textFont("zx_spectrum-7");
+  textStyle("bold");
+  textSize(20);
+  text(`M:MUSIC ${gameMusic}`, width / 2, 20);
 
   jack.moveAndDraw();
   horizontalLine.draw();
@@ -163,16 +181,14 @@ function startGame() {
   gameIntro[0].classList.toggle("hidden");
   const gameBoard = document.getElementById("game-board");
   gameBoard.classList.toggle("hidden");
-  loop();
-  bgMusic.setVolume(0.2);
   bgMusic.loop();
+  loop();
 }
 
 function initializeGame() {
   gameTime = 60;
   score = 0;
   holes = [];
-  enemies = [];
   gameState = "playing";
   jack = new Jack();
   horizontalLine = new Line();
@@ -236,11 +252,21 @@ function win() {
   restartGame();
 }
 
+function toggleGameMusic() {
+  if (!bgMusic.isPlaying()) {
+    bgMusic.play();
+    gameMusic = "OFF";
+  } else {
+    bgMusic.pause();
+    gameMusic = "ON";
+  }
+}
+
 function restartGame() {
   if (keyIsDown(ENTER)) {
     bgMusic.setVolume(0.2);
     bgMusic.loop();
     initializeGame();
-    loop();
+    // loop();
   }
 }
