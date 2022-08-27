@@ -9,6 +9,3 @@ Jhack can move left and right to get to the nearest hole above him.
 When Jhack jumps up a line he scores 5 points and two new holes appear in random lines moving left and right respectively.
 
 Link to the game: https://joaoserafim3001.github.io/IRON-JHACK/
-=======
-When Jhack jumps up a line he scores 5 points and two new holes appear in random lines moving left and right respectively.
->>>>>>> ab45ebbc8aec220aa55c91cd74185c2bb27eda4c
